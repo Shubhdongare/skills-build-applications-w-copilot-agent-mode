@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
-import { fetchResource } from '../api'
+import { fetchUrl } from '../api'
 import ResourceTable from './ResourceTable'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
+const leaderboardEndpoint = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev/api/leaderboard/`
+  : 'http://localhost:8000/api/leaderboard/'
 
 const columns = [
   { key: 'rank', label: 'Rank' },
@@ -11,7 +16,7 @@ const columns = [
 export default function Leaderboard() {
   const [payload, setPayload] = useState([])
   const [error, setError] = useState('')
-  useEffect(() => { fetchResource('leaderboard').then(setPayload).catch((loadError) => setError(loadError.message)) }, [])
+  useEffect(() => { fetchUrl(leaderboardEndpoint).then(setPayload).catch((loadError) => setError(loadError.message)) }, [])
   return <ResourceView title="Leaderboard" eyebrow="Competition" payload={payload} error={error} columns={columns} emptyMessage="The leaderboard will appear when scores are recorded." />
 }
 

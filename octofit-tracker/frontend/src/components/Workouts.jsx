@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
-import { fetchResource } from '../api'
+import { fetchUrl } from '../api'
 import ResourceTable from './ResourceTable'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
+const workoutsEndpoint = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev/api/workouts/`
+  : 'http://localhost:8000/api/workouts/'
 
 const columns = [
   { key: 'name', label: 'Workout' },
@@ -11,7 +16,7 @@ const columns = [
 export default function Workouts() {
   const [payload, setPayload] = useState([])
   const [error, setError] = useState('')
-  useEffect(() => { fetchResource('workouts').then(setPayload).catch((loadError) => setError(loadError.message)) }, [])
+  useEffect(() => { fetchUrl(workoutsEndpoint).then(setPayload).catch((loadError) => setError(loadError.message)) }, [])
   return <ResourceView title="Workouts" eyebrow="Your plan" payload={payload} error={error} columns={columns} emptyMessage="Personalized workouts will appear here." />
 }
 

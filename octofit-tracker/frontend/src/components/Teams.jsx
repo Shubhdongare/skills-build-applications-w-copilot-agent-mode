@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
-import { fetchResource } from '../api'
+import { fetchUrl } from '../api'
 import ResourceTable from './ResourceTable'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
+const teamsEndpoint = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev/api/teams/`
+  : 'http://localhost:8000/api/teams/'
 
 const columns = [
   { key: 'name', label: 'Team' },
@@ -11,7 +16,7 @@ const columns = [
 export default function Teams() {
   const [payload, setPayload] = useState([])
   const [error, setError] = useState('')
-  useEffect(() => { fetchResource('teams').then(setPayload).catch((loadError) => setError(loadError.message)) }, [])
+  useEffect(() => { fetchUrl(teamsEndpoint).then(setPayload).catch((loadError) => setError(loadError.message)) }, [])
   return <ResourceView title="Teams" eyebrow="Community" payload={payload} error={error} columns={columns} emptyMessage="Create a team to start competing together." />
 }
 

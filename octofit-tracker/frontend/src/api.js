@@ -29,3 +29,9 @@ export async function fetchResource(resource) {
   if (!response.ok) throw new Error(`Unable to load ${resource}`)
   return response.json()
 }
+
+export async function fetchUrl(url) {
+  const response = await fetch(url)
+  if (!response.ok) throw new Error(`Unable to load ${url}`)
+  return response.json()
+}

@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
-import { fetchResource } from '../api'
+import { fetchUrl } from '../api'
 import ResourceTable from './ResourceTable'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
+const usersEndpoint = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev/api/users/`
+  : 'http://localhost:8000/api/users/'
 
 const columns = [
   { key: 'name', label: 'Name' },
@@ -13,7 +18,7 @@ export default function Users() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchResource('users').then(setPayload).catch((loadError) => setError(loadError.message))
+    fetchUrl(usersEndpoint).then(setPayload).catch((loadError) => setError(loadError.message))
   }, [])
 
   return <ResourceView title="Members" eyebrow="People" payload={payload} error={error} columns={columns} emptyMessage="No members have joined yet." />
